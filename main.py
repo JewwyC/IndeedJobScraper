@@ -40,8 +40,9 @@ def main():
     country = united_states
     sender_email = os.getenv("SENDER_EMAIL")
     receiver_email = os.getenv("RECEIVER_EMAIL")
+    print(sender_email, receiver_email)
     password = os.getenv("PASSWORD")
-    job_position = ''
+    job_position = 'AI Product Manager'
     job_location = 'remote'
     date_posted = 10
 
@@ -70,7 +71,7 @@ def main():
         else:
             cleaned_df = clean_data(df)
             sorted_df = sort_data(cleaned_df)
-            # csv_file = save_csv(sorted_df, job_position, job_location)
+            csv_file = save_csv(sorted_df, job_position, job_location)
     finally:
         try:
             if sorted_df is not None:
