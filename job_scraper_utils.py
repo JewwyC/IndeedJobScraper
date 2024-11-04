@@ -63,21 +63,28 @@ def scrape_job_data(driver, country):
     while True:
         # count += 1
         soup = BeautifulSoup(driver.page_source, 'lxml')
-
         boxes = soup.find_all('div', class_='job_seen_beacon')
-
+        
         for i in boxes:
+            # print(i, "\n")
             link = i.find('a').get('href')
             link_full = country + link
-            job_title = i.find('a', class_='jcs-JobTitle css-jspxzf eu4oa1w0').text
+            job_title = i.find('a', class_='jcs-JobTitle css-1baag51 eu4oa1w0').text
             # Check if the 'Company' attribute exists
             company_tag = i.find('span', {'data-testid': 'company-name'})
             company = company_tag.text if company_tag else None
 
             try:
-                date_posted = i.find('span', class_='date').text
+                date_posted_tag = i.find('span', class_='formattedRelativeTime')
+                date_posted = date_posted_tag.text.strip() if date_posted_tag else None
+            
+            # Alternate search if 'formattedRelativeTime' is not found
+                if not date_posted:
+                    date_posted_tag = i.find('span', {'data-testid': 'myJobsStateDate'})
+                    date_posted = date_posted_tag.text.strip() if date_posted_tag else "Unknown"
+        
             except AttributeError:
-                date_posted = i.find('span', {'data-testid': 'myJobsStateDate'}).text.strip()
+                date_posted = "Unknown"  # Default value if no date found)
 
             location_element = i.find('div', {'data-testid': 'text-location'})
             location = ''
